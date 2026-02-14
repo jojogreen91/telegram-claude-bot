@@ -1,4 +1,5 @@
 import { query } from "@anthropic-ai/claude-agent-sdk";
+import { config } from "./config.js";
 
 // In-memory session storage per chat
 const sessions = new Map<string, string>();
@@ -31,7 +32,7 @@ export async function runClaude(
       cwd: projectDir,
       allowedTools: ["Read", "Edit", "Write", "Bash", "Grep", "Glob"],
       permissionMode: "acceptEdits",
-      maxTurns: 10,
+      maxTurns: config.maxTurns,
       ...(existingSessionId ? { resume: existingSessionId } : {}),
     },
   });

@@ -107,7 +107,7 @@ src/
 
 - **Polling, not webhooks** — no need to expose a port or set up ngrok
 - **`permissionMode: "acceptEdits"`** — file edits are auto-approved for hands-free operation
-- **`maxTurns: 10`** — prevents runaway loops
+- **`maxTurns`** — prevents runaway loops (configurable via `MAX_TURNS` env var, default: 30)
 - **Message splitting** — responses over 4096 chars are split across multiple messages
 
 ## Security

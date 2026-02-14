@@ -17,4 +17,5 @@ export const config = {
   telegramBotToken: requireEnv("TELEGRAM_BOT_TOKEN"),
   allowedChatId: requireEnv("ALLOWED_CHAT_ID"),
   defaultProjectDir: process.env.PROJECT_DIR || process.cwd(),
+  maxTurns: parseInt(process.env.MAX_TURNS || "30", 10),
 };
