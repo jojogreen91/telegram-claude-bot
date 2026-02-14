@@ -1,5 +1,7 @@
 # telegram-claude-bot
 
+**English** | [한국어](README.ko.md)
+
 Control Claude Code from your phone. Send a Telegram message, and Claude Code runs locally on your Mac — reads, edits, commits, and pushes code for you.
 
 ```
@@ -37,7 +39,7 @@ You're on the couch, on the bus, in bed. You think of a code change. You open Te
 ### 4. Install & configure
 
 ```bash
-git clone https://github.com/jojogreen/telegram-claude-bot.git
+git clone https://github.com/jojogreen91/telegram-claude-bot.git
 cd telegram-claude-bot
 npm install
 cp .env.example .env
