@@ -1,42 +1,42 @@
 # telegram-claude-bot
 
-**English** | [한국어](README.ko.md)
+[English](README.en.md) | **한국어**
 
-Control Claude Code from your phone. Send a Telegram message, and Claude Code runs locally on your Mac — reads, edits, commits, and pushes code for you.
+핸드폰 텔레그램으로 메시지를 보내면, 내 맥에서 Claude Code가 돌아간다. 코드 읽기, 수정, 커밋, 푸시까지 전부.
 
 ```
-You (Telegram) → Bot → Claude Code (your Mac) → Your codebase
+나 (텔레그램) → 봇 → Claude Code (내 맥) → 내 코드베이스
 ```
 
-## Why
+## 왜 만들었나
 
-You're on the couch, on the bus, in bed. You think of a code change. You open Telegram, type what you want, and Claude does it on your machine. No laptop needed.
+소파에서, 버스에서, 침대에서. 코드 고칠 게 생각났다. 텔레그램 열고 타이핑하면 Claude가 내 컴퓨터에서 알아서 해준다. 노트북 안 켜도 된다.
 
-## How it works
+## 어떻게 동작하나
 
-- **Telegram long polling** — no port forwarding, no server, no deploy
-- **Claude Agent SDK** — runs Claude Code programmatically with full tool access (Read, Edit, Write, Bash, Grep, Glob)
-- **Session persistence** — Claude remembers context within a conversation. Start fresh anytime with `/new`
-- **Chat ID whitelist** — only you can use your bot
+- **텔레그램 롱 폴링** — 포트포워딩 없음, 서버 없음, 배포 없음
+- **Claude Agent SDK** — Claude Code를 프로그래밍 방식으로 실행 (Read, Edit, Write, Bash, Grep, Glob 전부 사용)
+- **세션 유지** — 대화 맥락을 기억함. `/new`로 언제든 초기화
+- **채팅 ID 화이트리스트** — 본인만 사용 가능
 
-## Setup
+## 설치
 
-### 1. Create a Telegram bot
+### 1. 텔레그램 봇 생성
 
-1. Message **@BotFather** on Telegram
-2. `/newbot` → pick a name → get your **API token**
+1. 텔레그램에서 **@BotFather**에게 메시지
+2. `/newbot` → 이름 정하기 → **API 토큰** 받기
 
-### 2. Get your chat ID
+### 2. 내 채팅 ID 확인
 
-1. Message **@userinfobot** on Telegram
-2. Copy your **Id** number
+1. 텔레그램에서 **@userinfobot**에게 메시지
+2. **Id** 숫자 복사
 
-### 3. Prerequisites
+### 3. 사전 준비
 
 - Node.js 18+
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed and authenticated (`claude` CLI must work)
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 설치 및 인증 완료 (`claude` CLI가 동작해야 함)
 
-### 4. Install & configure
+### 4. 설치 및 설정
 
 ```bash
 git clone https://github.com/jojogreen91/telegram-claude-bot.git
@@ -45,73 +45,73 @@ npm install
 cp .env.example .env
 ```
 
-Edit `.env`:
+`.env` 수정:
 
 ```
-TELEGRAM_BOT_TOKEN=your_bot_token
-ALLOWED_CHAT_ID=your_chat_id
-PROJECT_DIR=/path/to/your/project
+TELEGRAM_BOT_TOKEN=봇_토큰
+ALLOWED_CHAT_ID=내_채팅_ID
+PROJECT_DIR=/작업할/프로젝트/경로
 ```
 
-### 5. Run
+### 5. 실행
 
 ```bash
 npm start
 ```
 
-That's it. Your Mac needs to stay on — the bot polls Telegram for messages.
+끝. 맥이 켜져 있어야 한다 — 봇이 텔레그램을 폴링하고 있으니까.
 
-## Commands
+## 명령어
 
-| Command | Description |
-|---------|-------------|
-| `/new` | Start a fresh Claude session |
-| `/session` | Show current session ID |
-| `/dir /some/path` | Change working directory |
-| `/dir` | Show current working directory |
+| 명령어 | 설명 |
+|--------|------|
+| `/new` | 새 Claude 세션 시작 |
+| `/session` | 현재 세션 ID 확인 |
+| `/dir /경로` | 작업 디렉토리 변경 |
+| `/dir` | 현재 작업 디렉토리 확인 |
 
-Anything else you type is sent directly to Claude Code as a prompt.
+그 외 모든 메시지는 Claude Code에 프롬프트로 전달된다.
 
-## Examples
+## 사용 예시
 
 ```
-You: Fix the typo in README.md
-Claude: (reads file, edits it, responds with what changed)
+나: README.md에 오타 고쳐줘
+Claude: (파일 읽고, 수정하고, 뭘 바꿨는지 알려줌)
 
-You: Add a .gitignore for Node projects
-Claude: (creates .gitignore with standard Node entries)
+나: Node용 .gitignore 만들어줘
+Claude: (.gitignore 생성)
 
-You: Run the tests and fix any failures
-Claude: (runs tests via Bash, reads errors, edits code, re-runs)
+나: 테스트 돌리고 실패하는 거 고쳐줘
+Claude: (Bash로 테스트 실행, 에러 읽고, 코드 수정, 재실행)
 
-You: /dir /Users/me/other-project
-Bot: Working directory set to: /Users/me/other-project
+나: /dir /Users/me/other-project
+봇: Working directory set to: /Users/me/other-project
 
-You: /new
-Bot: New session started.
+나: /new
+봇: New session started.
 ```
 
-## Architecture
+## 구조
 
 ```
 src/
-├── index.ts    # Entry point
-├── config.ts   # Env vars
-├── bot.ts      # Telegram bot logic
-└── claude.ts   # Claude Agent SDK wrapper + session management
+├── index.ts    # 진입점
+├── config.ts   # 환경변수
+├── bot.ts      # 텔레그램 봇 로직
+└── claude.ts   # Claude Agent SDK 래퍼 + 세션 관리
 ```
 
-- **Polling, not webhooks** — no need to expose a port or set up ngrok
-- **`permissionMode: "acceptEdits"`** — file edits are auto-approved for hands-free operation
-- **`maxTurns: 10`** — prevents runaway loops
-- **Message splitting** — responses over 4096 chars are split across multiple messages
+- **폴링 방식** — 포트 열거나 ngrok 설정할 필요 없음
+- **`permissionMode: "acceptEdits"`** — 파일 수정 자동 승인 (무인 실행)
+- **`maxTurns: 10`** — 무한 루프 방지
+- **메시지 분할** — 4096자 초과 응답은 자동으로 나눠서 전송
 
-## Security
+## 보안
 
-- Bot token and chat ID are in `.env` (gitignored)
-- `ALLOWED_CHAT_ID` ensures only your Telegram account can interact with the bot
-- Claude Code's built-in safety checks still apply
+- 봇 토큰과 채팅 ID는 `.env`에 저장 (gitignore 적용)
+- `ALLOWED_CHAT_ID`로 본인 외 접근 차단
+- Claude Code 자체 안전장치 적용
 
-## License
+## 라이선스
 
 MIT
