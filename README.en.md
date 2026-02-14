@@ -16,6 +16,7 @@ You're on the couch, on the bus, in bed. You think of a code change. You open Te
 
 - **Telegram long polling** — no port forwarding, no server, no deploy
 - **Claude Agent SDK** — runs Claude Code programmatically with full tool access (Read, Edit, Write, Bash, Grep, Glob)
+- **Voice message support** — voice messages are transcribed via Google Cloud STT and sent to Claude
 - **Session persistence** — Claude remembers context within a conversation. Start fresh anytime with `/new`
 - **Chat ID whitelist** — only you can use your bot
 
@@ -35,6 +36,7 @@ You're on the couch, on the bus, in bed. You think of a code change. You open Te
 
 - Node.js 18+
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed and authenticated (`claude` CLI must work)
+- (For voice messages) [Google Cloud Speech-to-Text](https://cloud.google.com/speech-to-text) setup with a service account key file
 
 ### 4. Install & configure
 
@@ -51,6 +53,7 @@ Edit `.env`:
 TELEGRAM_BOT_TOKEN=your_bot_token
 ALLOWED_CHAT_ID=your_chat_id
 PROJECT_DIR=/path/to/your/project
+GOOGLE_APPLICATION_CREDENTIALS=/path/to/your/service-account-key.json
 ```
 
 ### 5. Run
@@ -98,7 +101,8 @@ src/
 ├── index.ts    # Entry point
 ├── config.ts   # Env vars
 ├── bot.ts      # Telegram bot logic
-└── claude.ts   # Claude Agent SDK wrapper + session management
+├── claude.ts   # Claude Agent SDK wrapper + session management
+└── speech.ts   # Google Cloud STT (voice → text)
 ```
 
 - **Polling, not webhooks** — no need to expose a port or set up ngrok

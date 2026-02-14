@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.2.42",
+    "@google-cloud/speech": "^7.2.1",
     "dotenv": "^17.3.1",
     "node-telegram-bot-api": "^0.67.0"
   },

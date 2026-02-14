@@ -16,6 +16,7 @@
 
 - **텔레그램 롱 폴링** — 포트포워딩 없음, 서버 없음, 배포 없음
 - **Claude Agent SDK** — Claude Code를 프로그래밍 방식으로 실행 (Read, Edit, Write, Bash, Grep, Glob 전부 사용)
+- **음성 메시지 지원** — 음성 메시지를 Google Cloud STT로 텍스트 변환 후 Claude에 전달
 - **세션 유지** — 대화 맥락을 기억함. `/new`로 언제든 초기화
 - **채팅 ID 화이트리스트** — 본인만 사용 가능
 
@@ -35,6 +36,7 @@
 
 - Node.js 18+
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 설치 및 인증 완료 (`claude` CLI가 동작해야 함)
+- (음성 메시지 사용 시) [Google Cloud Speech-to-Text](https://cloud.google.com/speech-to-text) 설정 및 서비스 계정 키 파일
 
 ### 4. 설치 및 설정
 
@@ -51,6 +53,7 @@ cp .env.example .env
 TELEGRAM_BOT_TOKEN=봇_토큰
 ALLOWED_CHAT_ID=내_채팅_ID
 PROJECT_DIR=/작업할/프로젝트/경로
+GOOGLE_APPLICATION_CREDENTIALS=/서비스계정/키파일/경로.json
 ```
 
 ### 5. 실행
@@ -98,7 +101,8 @@ src/
 ├── index.ts    # 진입점
 ├── config.ts   # 환경변수
 ├── bot.ts      # 텔레그램 봇 로직
-└── claude.ts   # Claude Agent SDK 래퍼 + 세션 관리
+├── claude.ts   # Claude Agent SDK 래퍼 + 세션 관리
+└── speech.ts   # Google Cloud STT (음성→텍스트)
 ```
 
 - **폴링 방식** — 포트 열거나 ngrok 설정할 필요 없음

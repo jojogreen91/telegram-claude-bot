@@ -1,6 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
 import { config } from "./config.js";
 import { runClaude, clearSession, getSessionId } from "./claude.js";
+import { transcribeVoice } from "./speech.js";
 
 const MAX_MESSAGE_LENGTH = 4096;
 
@@ -76,6 +77,39 @@ export function startBot(): TelegramBot {
     try {
       const result = await runClaude(msg.text, projectDir, chatId);
       // Delete the "Processing..." message
+      await bot.deleteMessage(msg.chat.id, statusMsg.message_id);
+
+      const parts = splitMessage(result);
+      for (const part of parts) {
+        await bot.sendMessage(msg.chat.id, part);
+      }
+    } catch (err: any) {
+      await bot.deleteMessage(msg.chat.id, statusMsg.message_id);
+      await bot.sendMessage(msg.chat.id, `Error: ${err.message || err}`);
+    }
+  });
+
+  bot.on("voice", async (msg) => {
+    if (!isAllowed(msg.chat.id)) return;
+
+    const chatId = String(msg.chat.id);
+    const projectDir = getProjectDir(chatId);
+
+    const statusMsg = await bot.sendMessage(msg.chat.id, "Processing voice...");
+
+    try {
+      const fileId = msg.voice!.file_id;
+      const fileLink = await bot.getFileLink(fileId);
+      const res = await fetch(fileLink);
+      const audioBuffer = Buffer.from(await res.arrayBuffer());
+
+      const transcript = await transcribeVoice(audioBuffer);
+      await bot.editMessageText(`Voice: "${transcript}"\n\nProcessing...`, {
+        chat_id: msg.chat.id,
+        message_id: statusMsg.message_id,
+      });
+
+      const result = await runClaude(transcript, projectDir, chatId);
       await bot.deleteMessage(msg.chat.id, statusMsg.message_id);
 
       const parts = splitMessage(result);
